@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <!-- =========================
+         ACTION
+    ========================== -->
+    <record id="action_library_book" model="ir.actions.act_window">
+      <field name="name">Books</field>
+      <field name="res_model">library.book</field>
+      <field name="view_mode">tree,form,kanban</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_empty_folder">
+          Create your first book
+        </p>
+      </field>
+    </record>
+
+    <!-- =========================
+         MENUS
+    ========================== -->
+    <!-- Top-level menu -->
+    <menuitem id="menu_library_root"
+              name="Library"
+              sequence="10"/>
+
+    <!-- Submenu pointing to the action -->
+    <menuitem id="menu_library_books"
+              name="Books"
+              parent="menu_library_root"
+              action="action_library_book"
+              sequence="10"/>
+
+    <!-- =========================
+         SEARCH VIEW
+    ========================== -->
+    <record id="view_library_book_search" model="ir.ui.view">
+      <field name="name">library.book.search</field>
+      <field name="model">library.book</field>
+      <field name="arch" type="xml">
+        <search string="Search Books">
+          <field name="name"/>
+          <field name="author"/>
+          <field name="published_year"/>
+          <filter string="Available" name="available" domain="[('is_available','=',True)]"/>
+          <separator/>
+          <group expand="0" string="Group By">
+            <filter string="Author" name="group_author" context="{'group_by':'author'}"/>
+            <filter string="Year" name="group_year" context="{'group_by':'published_year'}"/>
+            <filter string="Availability" name="group_available" context="{'group_by':'is_available'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- =========================
+         TREE VIEW
+    ========================== -->
+    <record id="view_library_book_tree" model="ir.ui.view">
+      <field name="name">library.book.tree</field>
+      <field name="model">library.book</field>
+      <field name="arch" type="xml">
+        <tree string="Books" default_order="published_year desc,name">
+          <field name="name"/>
+          <field name="author"/>
+          <field name="published_year"/>
+          <field name="is_available"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- =========================
+         FORM VIEW
+    ========================== -->
+    <record id="view_library_book_form" model="ir.ui.view">
+      <field name="name">library.book.form</field>
+      <field name="model">library.book</field>
+      <field name="arch" type="xml">
+        <form string="Book">
+          <sheet>
+            <group>
+              <group>
+                <field name="name"/>
+                <field name="author"/>
+              </group>
+              <group>
+                <field name="published_year"/>
+                <field name="is_available"/>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- =========================
+         KANBAN VIEW (optional)
+    ========================== -->
+    <record id="view_library_book_kanban" model="ir.ui.view">
+      <field name="name">library.book.kanban</field>
+      <field name="model">library.book</field>
+      <field name="arch" type="xml">
+        <kanban default_group_by="author">
+          <field name="name"/>
+          <field name="author"/>
+          <field name="published_year"/>
+          <field name="is_available"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div class="oe_kanban_global_click o_kanban_record">
+                <div class="o_kanban_primary_bottom">
+                  <strong><field name="name"/></strong>
+                </div>
+                <div class="o_kanban_secondary_bottom">
+                  <span t-if="record.author.raw_value">👤 <field name="author"/></span>
+                </div>
+                <div class="o_kanban_secondary_bottom">
+                  <span t-if="record.published_year.raw_value">📅 <field name="published_year"/></span>
+                </div>
+                <div class="o_kanban_secondary_bottom">
+                  <span t-if="record.is_available.raw_value">✅ Available</span>
+                  <span t-if="!record.is_available.raw_value">⛔ Not available</span>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+  </data>
+</odoo>
